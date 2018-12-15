@@ -1,0 +1,75 @@
+{
+  "pageModelVersion": "18.4.1",
+  "title": "",
+  "description": "",
+  "variables": {
+    "valuein": {
+      "type": "string"
+    },
+    "valueout": {
+      "type": "string"
+    }
+  },
+  "types": {},
+  "chains": {
+    "ButtonAction": {
+      "description": "",
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      },
+      "root": "callModuleFunction1",
+      "actions": {
+        "callModuleFunction1": {
+          "module": "vb/action/builtin/callModuleFunctionAction",
+          "parameters": {
+            "module": "{{$page.functions}}",
+            "functionName": "callImportedJSFunction",
+            "params": [
+              "{{ $page.variables.valuein }}"
+            ]
+          },
+          "outcomes": {
+            "success": "assignVariables1"
+          }
+        },
+        "assignVariables1": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.valueout": {
+              "source": "{{ $chain.results.callModuleFunction1 }}"
+            }
+          }
+        }
+      }
+    }
+  },
+  "eventListeners": {
+    "ojButton1303627091OjAction": {
+      "chains": [
+        {
+          "chainId": "ButtonAction",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    }
+  },
+  "imports": {
+    "components": {
+      "oj-button": {
+        "path": "ojs/ojbutton"
+      },
+      "oj-label": {
+        "path": "ojs/ojlabel"
+      },
+      "oj-input-text": {
+        "path": "ojs/ojinputtext"
+      }
+    }
+  }
+}
